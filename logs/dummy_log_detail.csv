@@ -1,0 +1,6 @@
+experiment_id,tube1,tube2,tube3,tube4,tube5,tube6,tube7,tube8,tube9,tube10,tube11,tube12,tube13,tube14,tube15,tube16,tube17,tube18,tube19,tube20,tube21,tube22,tube23,tube24,tube25,tube26,tube27,tube28,tube29,tube30,tube31,tube32
+1,fail,not defined,pass,pass,fail,fail,not defined,fail,pass,fail,fail,pass,not defined,not defined,pass,fail,fail,fail,fail,pass,not defined,pass,fail,not defined,not defined,fail,pass,fail,fail,not defined,fail,not defined
+2,not defined,fail,fail,fail,not defined,not defined,fail,pass,pass,pass,not defined,pass,fail,not defined,fail,fail,fail,fail,not defined,pass,not defined,pass,not defined,fail,fail,not defined,not defined,not defined,pass,not defined,fail,fail
+3,fail,fail,pass,not defined,pass,pass,not defined,not defined,pass,fail,pass,fail,not defined,fail,pass,not defined,pass,fail,pass,fail,pass,fail,pass,not defined,not defined,fail,not defined,pass,pass,pass,not defined,fail
+4,pass,pass,pass,fail,fail,fail,fail,not defined,pass,not defined,fail,not defined,fail,fail,pass,pass,fail,fail,fail,pass,pass,not defined,not defined,pass,fail,fail,not defined,pass,pass,fail,fail,pass
+5,fail,fail,not defined,pass,pass,not defined,fail,pass,not defined,fail,fail,not defined,pass,fail,fail,not defined,pass,not defined,fail,fail,pass,not defined,pass,fail,pass,fail,not defined,pass,not defined,not defined,not defined,pass
