@@ -1,133 +1,221 @@
-import os
 import sys
-from PyQt6.QtWidgets import (QApplication, QMainWindow, QVBoxLayout, QHBoxLayout, QLabel, QListWidget, 
-                             QListWidgetItem, QTabWidget, QTableWidget, QWidget, QTextEdit, QPushButton)
-from PyQt6.QtGui import QPixmap, QIcon, QImageReader
+from PyQt6.QtWidgets import QApplication, QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QPushButton, QLabel, QLineEdit
+from PyQt6.QtGui import QIcon, QPixmap
 from PyQt6.QtCore import Qt, QSize
-from left_navigation import LeftNavigation
-from statistics_window import StatisticsWindow
 
-class Dashboard(QMainWindow):
+
+class CustomTitleBar(QWidget):
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        self.initUI()
+        self.setFixedHeight(50)
+        self.setObjectName("customTitleBar")
+
+    def initUI(self):
+        layout = QHBoxLayout(self)
+
+        # App logo
+        app_logo = QLabel(self)
+        pixmap = QPixmap("img/laboratory.svg")
+        scaled_pixmap = pixmap.scaled(30, 30, Qt.AspectRatioMode.KeepAspectRatio, Qt.TransformationMode.SmoothTransformation)
+        app_logo.setPixmap(scaled_pixmap)
+        layout.addWidget(app_logo)
+
+        layout.addStretch(1)
+
+        # Minimize button
+        minimize_btn = QPushButton("-")
+        minimize_btn.clicked.connect(self.parent().showMinimized)
+        minimize_btn.setObjectName("minimizeButton")
+        layout.addWidget(minimize_btn)
+
+        # Close button
+        close_btn = QPushButton("X")
+        close_btn.clicked.connect(self.parent().close)
+        close_btn.setObjectName("closeButton")
+        layout.addWidget(close_btn)
+
+
+class HomePanel(QWidget):
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        layout = QVBoxLayout(self)
+        layout.addWidget(QLabel("This is the Home Panel"))
+
+class StatistikenPanel(QWidget):
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        layout = QVBoxLayout(self)
+        layout.addWidget(QLabel("This is the Statistiken Panel"))
+
+class ImportPanel(QWidget):
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        layout = QVBoxLayout(self)
+        layout.addWidget(QLabel("This is the Import Panel"))
+
+class SettingsPanel(QWidget):
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        layout = QVBoxLayout(self)
+        layout.addWidget(QLabel("This is the Settings Panel"))
+
+class LeftNavigation(QWidget):
+    def __init__(self, main_window, parent=None):
+        super().__init__(parent)
+        self.main_window = main_window
+        self.initUI()
+        self.setObjectName("leftNavigationMenu")        
+
+    def connect_signals(self):
+        self.buttons["Home"].clicked.connect(self.show_home_panel)
+        self.buttons["Statistiken"].clicked.connect(self.show_statistiken_panel)
+        self.buttons["Import"].clicked.connect(self.show_import_panel)
+        self.buttons["Settings"].clicked.connect(self.show_settings_panel)
+
+    def initUI(self):
+        layout = QVBoxLayout(self)
+        layout.setAlignment(Qt.AlignmentFlag.AlignTop)
+
+        # Mapping of menu items to their respective icons
+        menu_items_icons = {
+            "Home": "img/home.svg",
+            "Statistiken": "img/dna.svg",
+            "Import": "img/home.svg",
+            "Settings": "img/home.svg"
+        }
+
+         # Stores the created buttons
+        self.buttons = {}  # Using a dictionary to store buttons by their names
+
+        for item, icon_path in menu_items_icons.items():
+            panel = QWidget(self)
+            panel_layout = QVBoxLayout(panel)
+            panel_layout.setContentsMargins(0, 0, 0, 0)
+            panel.setObjectName(item)
+            btn = QPushButton("")
+            btn.setIcon(QIcon(icon_path))
+            btn.setIconSize(QSize(32, 32))
+            btn.setFixedSize(40, 40)
+            btn.setObjectName(item)  # Sets the object name to the button
+            btn.setToolTip(item)
+            btn.enterEvent = lambda event, b=btn, i=item: self.show_text_on_hover(b, i)
+            btn.leaveEvent = lambda event, b=btn: self.hide_text_on_hover(b)
+            layout.addWidget(btn)
+            self.buttons[item] = btn  # Adds the button to the dictionary
+
+        self.connect_signals()
+        # Connects signals after the loop
+        # for btn in buttons:
+        #     if btn.objectName() == "Home":
+        #         btn.clicked.connect(self.show_home_panel)
+        #     elif btn.objectName() == "Statistiken":
+        #         btn.clicked.connect(self.show_statistiken_panel)
+        #     elif btn.objectName() == "Import":
+        #         btn.clicked.connect(self.show_import_panel)
+        #     elif btn.objectName() == "Settings":
+        #         btn.clicked.connect(self.show_settings_panel)
+
+    def show_home_panel(self):
+        self.main_window.home_panel.show()
+        self.main_window.statistiken_panel.hide()  
+        self.main_window.import_panel.hide()  
+        self.main_window.settings_panel.hide()
+
+    def show_statistiken_panel(self):
+        self.main_window.home_panel.hide()
+        self.main_window.statistiken_panel.show()
+        self.main_window.import_panel.hide()  
+        self.main_window.settings_panel.hide()
+
+    def show_import_panel(self):
+        self.main_window.home_panel.hide()
+        self.main_window.statistiken_panel.hide()
+        self.main_window.import_panel.show()  
+        self.main_window.settings_panel.hide()
+
+    def show_settings_panel(self):
+        self.main_window.home_panel.hide()
+        self.main_window.statistiken_panel.hide()
+        self.main_window.import_panel.hide()  
+        self.main_window.settings_panel.show()
+
+
+    def show_text_on_hover(self, btn, item):
+        # btn.setText(item)
+        btn.setFixedSize(40, 40)
+
+    def hide_text_on_hover(self, btn):
+        btn.setText("")
+        btn.setFixedSize(40, 40)
+
+
+class StyledDashboardApp(QMainWindow):
     def __init__(self):
         super().__init__()
-        self.init_ui()
-        self.__stream_logo = "img/stream.svg"
-        self.__home_logo = "img/home.svg"
 
-    def init_ui(self):
-        # Central widget and layout
-        self.central_widget = QWidget(self)
-        self.layout = QHBoxLayout(self.central_widget)
-        
+        # Set window properties
+        self.setWindowTitle("Dashboard Mockup")
+        self.setGeometry(100, 100, 800, 600)
 
-        url_to_logo = "img/home.svg"
-        self.left_nav_ui()
-        self.right_panel_ui()
-        # Initialize Import and Statistics panels but do not add them to right_panel yet
-        self.home_panel = self.left_nav.create_home_panel()
-        self.import_panel = self.left_nav.create_import_panel()
-        self.statistics_panel = self.left_nav.create_statistics_panel()
+        # Make the window frameless
+        self.setWindowFlags(Qt.WindowType.FramelessWindowHint)
 
-        self.right_panel.addWidget(self.home_panel)
-        self.left_nav.list_widget.itemClicked.connect(self.on_item_clicked)
+        self.home_panel = HomePanel(self)
+        self.statistiken_panel = StatistikenPanel(self)
+        self.import_panel = ImportPanel(self)
+        self.settings_panel = SettingsPanel(self)
 
-        self.setCentralWidget(self.central_widget)
-        self.layout.addWidget(self.right_panel_widget)
-        self.setWindowTitle('Dashboard')
-        self.setGeometry(100, 100, 1200, 800)
+        # Create central widget and layout
+        central_widget = QWidget(self)
+        main_layout = QVBoxLayout(central_widget)
+        self.setCentralWidget(central_widget)
 
-        # Load styles from QSS
-        with open("stylesheet/styles.qss", "r") as f:
-            self.setStyleSheet(f.read())
+        # Create custom title bar
+        title_bar = CustomTitleBar(self)
+        main_layout.addWidget(title_bar)
 
-        self.show()
+        # Create main content layout
+        content_layout = QHBoxLayout()
+        left_nav = LeftNavigation(self)
+        content_layout.addWidget(left_nav)
+        self.create_live_view(content_layout)
+        main_layout.addLayout(content_layout)
 
-    # Left Panel
-    def left_nav_ui(self):
-        self.left_nav = LeftNavigation()
-        self.layout.addWidget(self.left_nav)
-        self.left_nav.add_list_item_nav('Home', self.left_nav.home_logo)  
-        self.left_nav.add_list_item_nav('Statistics', self.left_nav.home_logo)  
-        self.left_nav.add_list_item_nav('Import', self.left_nav.home_logo) 
-        
+        main_layout.addWidget(self.home_panel)
+        main_layout.addWidget(self.statistiken_panel)
+        main_layout.addWidget(self.import_panel)
+        main_layout.addWidget(self.settings_panel)
 
+        #hide all panels
+        self.home_panel.show()
+        self.statistiken_panel.hide()
+        self.import_panel.hide()
+        self.settings_panel.hide()
 
-    # Right Panel
-    def right_panel_ui(self):
-        self.right_panel = QVBoxLayout()
-        self.right_panel.setContentsMargins(0, 0, 0, 0)  # Remove margins from the right panel layout
-        self.right_panel_widget = QWidget()
-        self.right_panel_widget.setLayout(self.right_panel)
-        
-    def get_pixmap_from_url(self, url):
-        image_reader = QImageReader(url)
-        image = image_reader.read()
-        return QPixmap.fromImage(image)
+        # Apply Stylesheet
+        self.apply_stylesheet()
 
-    
-    
-    def on_item_clicked(self, item):
-        # Clear the right panel and add the corresponding widget based on clicked item
-        for i in reversed(range(self.right_panel.count())): 
-            self.right_panel.itemAt(i).widget().setParent(None)
+    def create_live_view(self, main_layout):
+        live_view_layout = QVBoxLayout()
 
-        if item.text() == 'Home':
-            print("home btn clicked")
-            self.right_panel.addWidget(self.home_panel)
-        elif item.text() == 'Import':
-            print("import btn clicked")
-            self.right_panel.addWidget(self.import_panel)
-        elif item.text() == 'Statistics':
-            print("stats btn clicked")
-            statistics_window = StatisticsWindow()
-            self.right_panel.addWidget(statistics_window)
+        # Placeholder for live data
+        live_data_label = QLabel("Live Data Placeholder")
+        live_data_label.setObjectName("liveData")
+        live_view_layout.addWidget(live_data_label)
 
-    def add_card(self, row):
-        # Create a card-like widget
-        card_widget = QWidget()
-        card_layout = QHBoxLayout(card_widget)
+        main_layout.addLayout(live_view_layout, stretch=3)
 
-        # Paths to image icons
-        path_to_dna_icon = "img/dna.svg"
-        path_to_circle_icon = "img/circle.svg"
-        path_to_arrow_icon = "img/arrow-right.svg"
+    def apply_stylesheet(self):
+        with open('stylesheet/stylen.qss', 'r') as file:
+            stylesheet = file.read()
+        self.setStyleSheet(stylesheet)
 
-        # Create a DNA icon label (assuming it's common to all stations)
-        dna_label = QLabel()
-        dna_label.setPixmap(QPixmap(path_to_dna_icon))
-        dna_label.setAlignment(Qt.AlignmentFlag.AlignTop | Qt.AlignmentFlag.AlignHCenter)
-
-        for i in range(3):  # Example: 3 stations in each card
-            station_widget = QWidget()
-            station_layout = QVBoxLayout(station_widget)
-
-            circle_label = QLabel()
-            circle_label.setPixmap(QPixmap(path_to_circle_icon).scaledToWidth(30))  # Grey Circle representing station
-            circle_label.setAlignment(Qt.AlignmentFlag.AlignHCenter)
-
-            # Add the DNA Icon only to the first station
-            if i == 0:
-                station_layout.addWidget(dna_label)
-
-            station_layout.addWidget(circle_label)
-            card_layout.addWidget(station_widget)
-
-            if i < 2:  # Add an arrow between stations, except after the last station
-                arrow_label = QLabel()
-                arrow_label.setPixmap(QPixmap(path_to_arrow_icon).scaledToWidth(30))
-                card_layout.addWidget(arrow_label)
-
-        # Set the card widget as the cell widget in the table
-        self.table_widget.setCellWidget(row, 0, card_widget)
-
-
-
-def main():
+def run_app():
     app = QApplication(sys.argv)
-    dashboard = Dashboard()
-    dashboard.show()
+    mainWin = StyledDashboardApp()
+    mainWin.show()
     sys.exit(app.exec())
 
-
-if __name__ == '__main__':
-    main()
+if __name__ == "__main__":
+    run_app()

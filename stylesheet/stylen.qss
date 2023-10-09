@@ -1,0 +1,97 @@
+QMainWindow {
+    background-color: #f2f2f2;
+}
+
+QPushButton {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    font-size: 14px;
+    border-radius: 4px;
+}
+
+QPushButton#navMenuBtns {
+    text-align: center;
+    border: 2px solid #4CAF50;
+    background-color: transparent;
+    border-radius: 20px;
+}
+
+QPushButton#navMenuBtns:hover {
+    background-color: #4CAF50;
+}
+
+QPushButton#closeButton {
+    background-color: #FF0000;
+    min-height: 5px;
+    max-height: 5px;
+    min-width: 5px;
+    max-width: 5px;
+    font-size: 9px;
+    font-weight:bold;
+    border-radius: 5px;
+}
+
+QPushButton#closeButton:hover {
+    background-color: #f61109;
+}
+
+QPushButton#minimizeButton {
+   min-height: 5px;
+    max-height: 5px;
+    min-width: 5px;
+    max-width: 5px;
+    font-size: 14px;
+    font-weight:bold;
+    border-radius: 5px;
+}
+
+QPushButton:hover {
+    background-color: #45a049;
+}
+
+QLineEdit#searchBar {
+    padding: 5px;
+    border: 2px solid #ccc;
+    border-radius: 4px;
+    max-height:10px;
+    font-size: 14px;
+}
+
+QLineEdit#searchBar:focus {
+    border: 1px solid #4CAF50;  
+}
+
+QWidget#searchDiv {
+    background-color: #eee;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+QLineEdit {
+    padding: 5px;
+    border: 2px solid #ccc;
+    border-radius: 4px;
+}
+
+QWidget#leftNav {
+    background-color: #666;
+}
+
+QLabel#liveData {
+    font-size: 20px;
+}
+
+QWidget {
+    border: none;
+}
+
+#customTitleBar {
+    min-height: 50px; 
+    background-color: #FF0000;
+}
+
+#leftNavigationMenu {
+    background-color: #45a049;
+    margin-left: 0%;
+}
