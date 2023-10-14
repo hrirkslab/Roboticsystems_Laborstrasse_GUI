@@ -34,7 +34,7 @@ To get started with the Robotic Laborstraße GUI Project, follow these steps:
 - Clone the repository to your local machine.
 
 ```bash
-git clone https://github.com/your/repository.git
+https://github.com/hrirkslab/Roboticsystems_Laborstrasse_GUI.git
 ```
 - Install the required dependencies.
 
