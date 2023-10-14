@@ -28,7 +28,7 @@ QPushButton#closeButton {
     max-height: 5px;
     min-width: 5px;
     max-width: 5px;
-    font-size: 9px;
+    font-size: 12px;
     font-weight:bold;
     border-radius: 5px;
 }
