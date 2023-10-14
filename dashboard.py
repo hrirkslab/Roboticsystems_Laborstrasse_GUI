@@ -1,7 +1,9 @@
 import sys
 from PyQt6.QtWidgets import QApplication, QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QPushButton, QLabel, QLineEdit
-from PyQt6.QtGui import QIcon, QPixmap
-from PyQt6.QtCore import Qt, QSize
+from PyQt6.QtGui import QIcon, QPixmap, QMouseEvent
+from PyQt6.QtCore import Qt, QSize, QObject, QEvent
+
+from CustomTitleBar import CustomTitleBar
 
 """
 Robotic Laborstraße GUI Project - Component
@@ -11,38 +13,6 @@ This code is a part of the Bachelor's thesis authored by Ujwal Subedi, conducted
 Author: Ujwal Subedi
 Date: 14.10.2023
 """
-
-class CustomTitleBar(QWidget):
-    def __init__(self, parent=None):
-        super().__init__(parent)
-        self.initUI()
-        self.setFixedHeight(50)
-        self.setObjectName("customTitleBar")
-
-    def initUI(self):
-        layout = QHBoxLayout(self)
-
-        # App logo
-        app_logo = QLabel(self)
-        pixmap = QPixmap("img/laboratory.svg")
-        scaled_pixmap = pixmap.scaled(30, 30, Qt.AspectRatioMode.KeepAspectRatio, Qt.TransformationMode.SmoothTransformation)
-        app_logo.setPixmap(scaled_pixmap)
-        layout.addWidget(app_logo)
-
-        layout.addStretch(1)
-
-        # Minimize button
-        minimize_btn = QPushButton("-")
-        minimize_btn.clicked.connect(self.parent().showMinimized)
-        minimize_btn.setObjectName("minimizeButton")
-        layout.addWidget(minimize_btn)
-
-        # Close button
-        close_btn = QPushButton("X")
-        close_btn.clicked.connect(self.parent().close)
-        close_btn.setObjectName("closeButton")
-        layout.addWidget(close_btn)
-
 
 class HomePanel(QWidget):
     def __init__(self, parent=None):
@@ -88,6 +58,7 @@ class LeftNavigation(QWidget):
     def initUI(self):
         layout = QVBoxLayout(self)
         layout.setAlignment(Qt.AlignmentFlag.AlignTop)
+        
 
         # Mapping of menu items to their respective icons
         menu_items_icons = {
@@ -160,6 +131,9 @@ class StyledDashboardApp(QMainWindow):
         self.setWindowTitle("Dashboard GUI")
         self.setGeometry(100, 100, 800, 600)
 
+        title_bar = CustomTitleBar(self)
+        self.setMenuWidget(title_bar)
+
         # Make the window frameless
         self.setWindowFlags(Qt.WindowType.FramelessWindowHint)
 
@@ -172,10 +146,6 @@ class StyledDashboardApp(QMainWindow):
         central_widget = QWidget(self)
         main_layout = QVBoxLayout(central_widget)
         self.setCentralWidget(central_widget)
-
-        # Create custom title bar
-        title_bar = CustomTitleBar(self)
-        main_layout.addWidget(title_bar)
 
         # Create main content layout
         content_layout = QHBoxLayout()
@@ -201,10 +171,10 @@ class StyledDashboardApp(QMainWindow):
     def create_live_view(self, main_layout):
         live_view_layout = QVBoxLayout()
 
-        # Placeholder for live data
-        live_data_label = QLabel("Live Data Placeholder")
-        live_data_label.setObjectName("liveData")
-        live_view_layout.addWidget(live_data_label)
+        # Create and add your panels here
+        live_data_panel = LiveDataPanel(self)
+        live_view_layout.addWidget(live_data_panel)
+        live_view_layout.setObjectName("live_panel")
 
         main_layout.addLayout(live_view_layout, stretch=3)
 
@@ -212,6 +182,35 @@ class StyledDashboardApp(QMainWindow):
         with open('stylesheet/stylen.qss', 'r') as file:
             stylesheet = file.read()
         self.setStyleSheet(stylesheet)
+
+class LiveDataPanel(QWidget):
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        self.initUI()
+
+    def initUI(self):
+        layout = QVBoxLayout(self)
+        live_data_label = QLabel("Live Data Placeholder")
+        layout.addWidget(live_data_label)
+
+
+        # Add HomePanel
+        home_panel = HomePanel(self)
+        layout.addWidget(home_panel)
+
+        # Add StatistikenPanel
+        statistiken_panel = StatistikenPanel(self)
+        layout.addWidget(statistiken_panel)
+
+        # Add ImportPanel
+        import_panel = ImportPanel(self)
+        layout.addWidget(import_panel)
+
+        # Add SettingsPanel
+        settings_panel = SettingsPanel(self)
+        layout.addWidget(settings_panel)
+
+        self.setObjectName("liveDataPanel")
 
 def run_app():
     app = QApplication(sys.argv)

@@ -87,11 +87,16 @@ QWidget {
 }
 
 #customTitleBar {
-    min-height: 50px; 
+    min-height: 100px; 
     background-color: #FF0000;
 }
 
 #leftNavigationMenu {
     background-color: #45a049;
     margin-left: 0%;
+}
+
+#live_panel {
+    background-color: aqua;
+    border: 1px solid #FF0000;
 }
