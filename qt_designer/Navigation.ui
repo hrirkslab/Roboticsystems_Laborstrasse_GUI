@@ -33,7 +33,7 @@
       </rect>
      </property>
      <property name="currentIndex">
-      <number>3</number>
+      <number>2</number>
      </property>
      <widget class="QWidget" name="homePage">
       <property name="whatsThis">
@@ -79,17 +79,30 @@
       </widget>
      </widget>
      <widget class="QWidget" name="impotPage">
-      <widget class="QLabel" name="label_3">
+      <widget class="QPushButton" name="pushButton">
        <property name="geometry">
         <rect>
-         <x>190</x>
-         <y>120</y>
-         <width>49</width>
-         <height>16</height>
+         <x>30</x>
+         <y>40</y>
+         <width>281</width>
+         <height>24</height>
         </rect>
        </property>
        <property name="text">
-        <string>Import</string>
+        <string>Experiment anlegen</string>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="lineEdit">
+       <property name="geometry">
+        <rect>
+         <x>40</x>
+         <y>120</y>
+         <width>201</width>
+         <height>22</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Experiment Name</string>
        </property>
       </widget>
      </widget>
@@ -116,7 +129,7 @@
          <string/>
         </property>
        </widget>
-       <widget class="QWidget" name="">
+       <widget class="QWidget" name="layoutWidget">
         <property name="geometry">
          <rect>
           <x>50</x>
